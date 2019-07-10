@@ -25,6 +25,7 @@ import static java.lang.Math.sin;
 
 public class MainActivity extends AppCompatActivity implements LocationListener, SensorEventListener {
     private static final String TAG = "MainActivity";
+    private static double abc;
     final String LOG_LABEL = "Location Listener>>";
     SensorManager mSensorManager;
     private Sensor mAccelerometer;
@@ -79,10 +80,10 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     public void onLocationChanged(Location location) {
         double speed = 0.0;
         if (lastLocation != null) {
-            speed = Math.sqrt(
+            speed = (Math.sqrt(
                     Math.pow(location.getLongitude() - lastLocation.getLongitude(), 2)
                             + Math.pow(location.getLatitude() - lastLocation.getLatitude(), 2)
-            ) / (location.getTime() - lastLocation.getTime());
+            )) / (location.getTime() - lastLocation.getTime());
         }
 
 
@@ -92,48 +93,72 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
         stringBuilder.append("TIME ==" + formatter.format(calendar.getTime()));
         stringBuilder.append('\n');
-
-
-        stringBuilder.append("manual speed calculation ==" + (int) speed + " m/s");
-        stringBuilder.append('\n');
-
-        stringBuilder.append("manual speed calculation ==" + (int) ((speed) * 3600) / 1000 + " km/h");
         stringBuilder.append('\n');
 
 
-        stringBuilder.append("Accuracy ==" + location.getAccuracy());
+        stringBuilder.append("manual speed maths sqrt == " + speed + " m/s");
+        stringBuilder.append('\n');
         stringBuilder.append('\n');
 
-        stringBuilder.append("Speed ==" + location.getSpeed());
+        stringBuilder.append("manual km speed calculation == " + (int) ((speed) * 3600) / 1000 + " km/h");
+        stringBuilder.append('\n');
         stringBuilder.append('\n');
 
-        stringBuilder.append("kilo Speed ==" + (int) ((location.getSpeed() * 3600) / 1000) + " km/h");
-        stringBuilder.append('\n');
-
-        stringBuilder.append("Latitude ==" + location.getLatitude());
-        stringBuilder.append('\n');
-
-        stringBuilder.append("Longitude ==" + location.getLongitude());
-        stringBuilder.append('\n');
-
-        stringBuilder.append("Altitude ==" + location.getAltitude());
-        stringBuilder.append('\n');
-
-        stringBuilder.append("ElapsedRealtimeNanos ==" + location.getElapsedRealtimeNanos());
-        stringBuilder.append('\n');
-
-        stringBuilder.append("Time Mil ==" + location.getTime());
-        stringBuilder.append('\n');
         if (lastLocation != null) {
+
+
+            stringBuilder.append("manual km speed sin == " + getSpeed(location,lastLocation) + " km/h");
+            stringBuilder.append('\n');
+            stringBuilder.append('\n');
+
+            stringBuilder.append("manual distance== " + abc);
+            stringBuilder.append('\n');
+            stringBuilder.append('\n');
+
             stringBuilder.append("Time dif  ==" + (location.getTime() - lastLocation.getTime()));
             stringBuilder.append('\n');
+            stringBuilder.append('\n');
         }
+
+
+        stringBuilder.append("Accuracy == " + location.getAccuracy());
+        stringBuilder.append('\n');
+        stringBuilder.append('\n');
+
+        stringBuilder.append("Speed == " + location.getSpeed() + " m/s");
+        stringBuilder.append('\n');
+        stringBuilder.append('\n');
+
+        stringBuilder.append("kilo Speed == " + (int) ((location.getSpeed() * 3600) / 1000) + " km/h");
+        stringBuilder.append('\n');
+        stringBuilder.append('\n');
+
+        stringBuilder.append("Latitude == " + location.getLatitude());
+        stringBuilder.append('\n');
+
+        stringBuilder.append("Longitude == " + location.getLongitude());
+        stringBuilder.append('\n');
+        stringBuilder.append('\n');
+
+        stringBuilder.append("Altitude == " + location.getAltitude());
+        stringBuilder.append('\n');
+        stringBuilder.append('\n');
+
+        stringBuilder.append("ElapsedRealtimeNanos == " + location.getElapsedRealtimeNanos());
+        stringBuilder.append('\n');
+
+        stringBuilder.append("Time Mil == " + location.getTime());
+        stringBuilder.append('\n');
+        stringBuilder.append('\n');
+
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             stringBuilder.append("SpeedAccuracyMetersPerSecond ==" + location.getSpeedAccuracyMetersPerSecond() + " m/s");
             stringBuilder.append('\n');
+            stringBuilder.append('\n');
 
-            stringBuilder.append("SpeedAccuracykiloMetersPerSecond ==" + (int)(location.getSpeedAccuracyMetersPerSecond() * 3600) / 1000 + " km/h");
+            stringBuilder.append("SpeedAccuracykiloMetersPerSecond ==" + (int) (location.getSpeedAccuracyMetersPerSecond() * 3600) / 1000 + " km/h");
+            stringBuilder.append('\n');
             stringBuilder.append('\n');
         }
 
@@ -166,6 +191,33 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     @Override
     public void onAccuracyChanged(Sensor sensor, int i) {
         Log.d("MainActivity", "onAccuracyChanged: " + sensor.getName() + " i=" + i);
+    }
+
+    public static double getSpeed(Location currentLocation, Location oldLocation)
+    {
+        double newLat = currentLocation.getLatitude();
+        double newLon = currentLocation.getLongitude();
+
+        double oldLat = oldLocation.getLatitude();
+        double oldLon = oldLocation.getLongitude();
+
+        if(currentLocation.hasSpeed()){
+            return currentLocation.getSpeed();
+        } else {
+            double radius = 6371000;
+            double dLat = Math.toRadians(newLat-oldLat);
+            double dLon = Math.toRadians(newLon-oldLon);
+            double a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                    Math.cos(Math.toRadians(newLat)) * Math.cos(Math.toRadians(oldLat)) *
+                            Math.sin(dLon/2) * Math.sin(dLon/2);
+            double c = 2 * Math.asin(Math.sqrt(a));
+            double distance =  Math.round(radius * c);
+
+            abc=distance;
+
+            double timeDifferent = currentLocation.getTime() - oldLocation.getTime();
+            return distance/timeDifferent;
+        }
     }
 
 }
