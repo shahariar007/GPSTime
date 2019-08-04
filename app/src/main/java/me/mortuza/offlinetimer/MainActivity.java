@@ -13,6 +13,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
 import android.os.Build;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -105,14 +106,14 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
     protected void onResume() {
         super.onResume();
-        if(mSensorManager!=null)
-        registListener();
+        if (mSensorManager != null)
+            registListener();
     }
 
     protected void onPause() {
         super.onPause();
-        if (mSensorManager!=null)
-        mSensorManager.unregisterListener(this);
+        if (mSensorManager != null)
+            mSensorManager.unregisterListener(this);
     }
 
     @SuppressLint("MissingPermission")
@@ -262,6 +263,11 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     }
 
     public String getAddress(double a, double b) {
+
+        if (!isNetworkConnected()) {
+            return "Connect Internet for location address";
+        }
+
         Geocoder geocoder;
         List<Address> addresses;
         geocoder = new Geocoder(this, Locale.getDefault());
@@ -279,6 +285,12 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
             e.printStackTrace();
             return e.getMessage();
         }
+    }
+
+    private boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        return cm.getActiveNetworkInfo() != null;
     }
 
     private void handlePermissionClicked() {
