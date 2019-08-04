@@ -261,6 +261,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
             return ((distance / timeDifferent) * 3600) / 1000;
         }
     }
+    //TO
 
     public String getAddress(double a, double b) {
 
