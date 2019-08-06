@@ -152,10 +152,11 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
         this.lastLocation = location;
         x++;
-        working.setText(" working count= " + x);
+        working.setText(" working count= " + x + "TOP SPEED == " + TOP_SPEED);
 
         if (TOP_SPEED <= ACTUAL_SPEED) {
             flagInsert = true;
+            TOP_SPEED = ACTUAL_SPEED;
         } else {
             flagInsert = false;
         }
@@ -163,11 +164,10 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         if (flagInsert) {
             speedUPModel = new SpeedUPModel();
             speedUPModel.setAddress(ADDRESS);
-            speedUPModel.setDateTimes(Time);
+            speedUPModel.setDateTimes(Time + " ");
             speedUPModel.setLat((float) location.getLatitude());
             speedUPModel.setLat((float) location.getLongitude());
             speedUPModel.setTopSpeed(ACTUAL_SPEED);
-            TOP_SPEED = ACTUAL_SPEED;
         } else {
             speedUPModel = null;
         }
@@ -178,6 +178,9 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     public void insert() {
         if (speedUPModel != null && flagInsert)
             DatabaseInitializer.insert(AppDatabase.getAppDatabase(this), speedUPModel);
+
+        SpeedUPModel speedUPModel = DatabaseInitializer.getLastContent(AppDatabase.getAppDatabase(this));
+        TOP_SPEED = speedUPModel.getTopSpeed();
     }
 
     @Override
@@ -206,6 +209,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     }
 
     public static double getSpeed(Location currentLocation, Location oldLocation) {
+        if(currentLocation==null ||oldLocation==null )
+            return 0.0;
         double newLat = currentLocation.getLatitude();
         double newLon = currentLocation.getLongitude();
 
