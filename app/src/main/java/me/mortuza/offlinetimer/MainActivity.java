@@ -28,8 +28,14 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
+
+import me.mortuza.offlinetimer.model.SpeedUPModel;
+import me.mortuza.offlinetimer.roomDatabase.AppDatabase;
+import me.mortuza.offlinetimer.roomDatabase.DatabaseInitializer;
 
 import static java.lang.Math.acos;
 import static java.lang.Math.cos;
@@ -57,6 +63,14 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     double lat;
     double lon;
     Location lastLocation;
+    SpeedUPModel speedUPModel;
+    int TOP_SPEED = -1;
+    boolean flagInsert = true;
+
+    String Time = "";
+    int ACTUAL_SPEED = 0;
+    int MANUAL_SPEED = 0;
+    String ADDRESS = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,92 +137,47 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         stringBuilder = new StringBuilder();
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(location.getTime());
-//
-//        stringBuilder.append("TIME ==" + formatter.format(calendar.getTime()));
-//        stringBuilder.append('\n');
-//        stringBuilder.append('\n');
-//
-//
-//        stringBuilder.append("manual speed maths sqrt == " + speed + " m/s");
-//        stringBuilder.append('\n');
-//        stringBuilder.append('\n');
-//
-//        stringBuilder.append("manual km speed calculation == " + (int) ((speed) * 3600) / 1000 + " km/h");
-//        stringBuilder.append('\n');
-//        stringBuilder.append('\n');
-//
-//        if (lastLocation != null) {
-//
-//
-//            stringBuilder.append("manual km speed sin == " + ((getSpeed(location, lastLocation) * 3600) / 1000) + " km/h");
-//            stringBuilder.append('\n');
-//            stringBuilder.append('\n');
-//
-//            stringBuilder.append("manual distance== " + abc);
-//            stringBuilder.append('\n');
-//            stringBuilder.append('\n');
-//
-//            stringBuilder.append("Time dif  ==" + (location.getTime() - lastLocation.getTime()));
-//            stringBuilder.append('\n');
-//            stringBuilder.append('\n');
-//        }
-//
-//
-//        stringBuilder.append("Accuracy == " + location.getAccuracy());
-//        stringBuilder.append('\n');
-//        stringBuilder.append('\n');
-//
-//        stringBuilder.append("Speed == " + location.getSpeed() + " m/s");
-//        stringBuilder.append('\n');
-//        stringBuilder.append('\n');
-//
-//        stringBuilder.append("kilo Speed == " + (int) ((location.getSpeed() * 3600) / 1000) + " km/h");
-//        stringBuilder.append('\n');
-//        stringBuilder.append('\n');
-//
-//        stringBuilder.append("Latitude == " + location.getLatitude());
-//        stringBuilder.append('\n');
-//
-//        stringBuilder.append("Longitude == " + location.getLongitude());
-//        stringBuilder.append('\n');
-//        stringBuilder.append('\n');
-//
-//        stringBuilder.append("Altitude == " + location.getAltitude());
-//        stringBuilder.append('\n');
-//        stringBuilder.append('\n');
-//
-//        stringBuilder.append("ElapsedRealtimeNanos == " + location.getElapsedRealtimeNanos());
-//        stringBuilder.append('\n');
-//
-//        stringBuilder.append("Time Mil == " + location.getTime());
-//        stringBuilder.append('\n');
-//        stringBuilder.append('\n');
-//
-//        stringBuilder.append("Address == " + getAddress(location.getLatitude(), location.getLongitude()));
-//        stringBuilder.append('\n');
-//        stringBuilder.append('\n');
-//
-//
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            stringBuilder.append("SpeedAccuracyMetersPerSecond ==" + location.getSpeedAccuracyMetersPerSecond() + " m/s");
-//            stringBuilder.append('\n');
-//            stringBuilder.append('\n');
-//
-//            stringBuilder.append("SpeedAccuracykiloMetersPerSecond ==" + (int) (location.getSpeedAccuracyMetersPerSecond() * 3600) / 1000 + " km/h");
-//            stringBuilder.append('\n');
-//            stringBuilder.append('\n');
-//        }
 
-        checkSpeedTime.setText(formatter.format(calendar.getTime()) + " ");
-        checkSpeedAndTime.setText((int) ((location.getSpeed() * 3600) / 1000) + "");
-        checkSpeedAddress.setText(getAddress(location.getLatitude(), location.getLongitude()));
+        Time = formatter.format(calendar.getTime()) + " ";
+        ACTUAL_SPEED = (int) ((location.getSpeed() * 3600) / 1000);
+        ADDRESS = getAddress(location.getLatitude(), location.getLongitude());
+        MANUAL_SPEED = ((int) (getSpeed(location, lastLocation) * 3600) / 1000);
+
+        checkSpeedTime.setText(Time);
+        checkSpeedAndTime.setText(ACTUAL_SPEED + " ");
+        checkSpeedAddress.setText(ADDRESS);
 
         if (lastLocation != null)
-            checkSpeedManual.setText(((int) (getSpeed(location, lastLocation) * 3600) / 1000) + "");
+            checkSpeedManual.setText(MANUAL_SPEED + " ");
 
         this.lastLocation = location;
         x++;
         working.setText(" working count= " + x);
+
+        if (TOP_SPEED <= ACTUAL_SPEED) {
+            flagInsert = true;
+        } else {
+            flagInsert = false;
+        }
+
+        if (flagInsert) {
+            speedUPModel = new SpeedUPModel();
+            speedUPModel.setAddress(ADDRESS);
+            speedUPModel.setDateTimes(Time);
+            speedUPModel.setLat((float) location.getLatitude());
+            speedUPModel.setLat((float) location.getLongitude());
+            speedUPModel.setTopSpeed(ACTUAL_SPEED);
+            TOP_SPEED = ACTUAL_SPEED;
+        } else {
+            speedUPModel = null;
+        }
+
+        insert();
+    }
+
+    public void insert() {
+        if (speedUPModel != null && flagInsert)
+            DatabaseInitializer.insert(AppDatabase.getAppDatabase(this), speedUPModel);
     }
 
     @Override
@@ -343,6 +312,82 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
 
     }
+
+    //
+//        stringBuilder.append("TIME ==" + formatter.format(calendar.getTime()));
+//        stringBuilder.append('\n');
+//        stringBuilder.append('\n');
+//
+//
+//        stringBuilder.append("manual speed maths sqrt == " + speed + " m/s");
+//        stringBuilder.append('\n');
+//        stringBuilder.append('\n');
+//
+//        stringBuilder.append("manual km speed calculation == " + (int) ((speed) * 3600) / 1000 + " km/h");
+//        stringBuilder.append('\n');
+//        stringBuilder.append('\n');
+//
+//        if (lastLocation != null) {
+//
+//
+//            stringBuilder.append("manual km speed sin == " + ((getSpeed(location, lastLocation) * 3600) / 1000) + " km/h");
+//            stringBuilder.append('\n');
+//            stringBuilder.append('\n');
+//
+//            stringBuilder.append("manual distance== " + abc);
+//            stringBuilder.append('\n');
+//            stringBuilder.append('\n');
+//
+//            stringBuilder.append("Time dif  ==" + (location.getTime() - lastLocation.getTime()));
+//            stringBuilder.append('\n');
+//            stringBuilder.append('\n');
+//        }
+//
+//
+//        stringBuilder.append("Accuracy == " + location.getAccuracy());
+//        stringBuilder.append('\n');
+//        stringBuilder.append('\n');
+//
+//        stringBuilder.append("Speed == " + location.getSpeed() + " m/s");
+//        stringBuilder.append('\n');
+//        stringBuilder.append('\n');
+//
+//        stringBuilder.append("kilo Speed == " + (int) ((location.getSpeed() * 3600) / 1000) + " km/h");
+//        stringBuilder.append('\n');
+//        stringBuilder.append('\n');
+//
+//        stringBuilder.append("Latitude == " + location.getLatitude());
+//        stringBuilder.append('\n');
+//
+//        stringBuilder.append("Longitude == " + location.getLongitude());
+//        stringBuilder.append('\n');
+//        stringBuilder.append('\n');
+//
+//        stringBuilder.append("Altitude == " + location.getAltitude());
+//        stringBuilder.append('\n');
+//        stringBuilder.append('\n');
+//
+//        stringBuilder.append("ElapsedRealtimeNanos == " + location.getElapsedRealtimeNanos());
+//        stringBuilder.append('\n');
+//
+//        stringBuilder.append("Time Mil == " + location.getTime());
+//        stringBuilder.append('\n');
+//        stringBuilder.append('\n');
+//
+//        stringBuilder.append("Address == " + getAddress(location.getLatitude(), location.getLongitude()));
+//        stringBuilder.append('\n');
+//        stringBuilder.append('\n');
+//
+//
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            stringBuilder.append("SpeedAccuracyMetersPerSecond ==" + location.getSpeedAccuracyMetersPerSecond() + " m/s");
+//            stringBuilder.append('\n');
+//            stringBuilder.append('\n');
+//
+//            stringBuilder.append("SpeedAccuracykiloMetersPerSecond ==" + (int) (location.getSpeedAccuracyMetersPerSecond() * 3600) / 1000 + " km/h");
+//            stringBuilder.append('\n');
+//            stringBuilder.append('\n');
+//        }
 }
 
 
