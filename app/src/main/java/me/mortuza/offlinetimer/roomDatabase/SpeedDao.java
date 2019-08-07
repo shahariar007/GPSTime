@@ -18,6 +18,6 @@ interface SpeedDao {
     @Query("SELECT * FROM speed")
     List<SpeedUPModel> getAllSpeedList();
 
-    @Query("SELECT * FROM speed ORDER BY uid DESC LIMIT 1")
-    SpeedUPModel getLastContent();
+    @Query("SELECT max(TopSpeed) FROM speed")
+    int getLastContent();
 }

@@ -8,132 +8,146 @@
     android:fillViewport="true"
     tools:context=".MainActivity">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#116F9C"
+        android:orientation="vertical"
         tools:context=".MainActivity">
 
-        <TextView
-            android:id="@+id/gps"
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:text="(-_-) GPS SPEED (-_-)"
-            android:textStyle="bold"
-            android:textColor="#09EEA7"
-            android:textSize="30dp" />
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:layout_weight=".6"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/actualSpeed"
+            <android.support.design.widget.CoordinatorLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:id="@+id/topLayout"
+                    android:layout_width="@dimen/_120sdp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/background_1"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+
+                        <ImageView
+                            android:id="@+id/imageBox"
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/_40sdp"
+                            android:adjustViewBounds="true"
+                            android:src="@drawable/speedometer"
+                            tools:ignore="ContentDescription" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:padding="@dimen/_4sdp"
+                            android:text="TOP"
+                            android:textSize="@dimen/_20sdp"
+                            android:textStyle="bold"
+                            tools:fontFamily="@font/audiowide" />
+                    </LinearLayout>
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="80"
+                        android:textSize="@dimen/_40sdp"
+                        android:textStyle="bold"
+                        tools:fontFamily="@font/aldrich" />
+
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="@dimen/_60sdp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/_100sdp"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/kmh"
+                    app:layout_anchor="@id/topLayout"
+                    app:layout_anchorGravity="center|right" />
+            </android.support.design.widget.CoordinatorLayout>
+
+
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/gps"
-            android:background="#116F9C"
-            android:gravity="center"
-            android:text="Actual Speed"
-            android:textColor="#0CF505"
-            android:textSize="30dp" />
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginRight="@dimen/_10sdp"
+            android:layout_weight=".5"
+            android:background="@drawable/background_2"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/checkSpeedAndTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/actualSpeed"
-            android:layout_centerHorizontal="true"
-            android:background="#116F9C"
-            android:gravity="center"
-            android:text="0"
-            android:textColor="#0BB2B9"
-            android:textSize="150dp" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="TOP SPEED"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/_16sdp"
+                android:textStyle="bold"
+                tools:fontFamily="@font/audiowide" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/actualSpeed"
-            android:layout_toRightOf="@+id/checkSpeedAndTime"
-            android:background="#116F9C"
-            android:gravity="center"
-            android:text="KM"
-            android:textColor="#0BB2B9"
-            android:textSize="50dp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/manualSpeed"
+                <ImageView
+                    android:id="@+id/imageCar"
+                    android:layout_width="@dimen/_120sdp"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:background="#FF00BF"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/eee"
+                    tools:ignore="ContentDescription" />
+
+                <TextView
+                    android:id="@+id/checkSpeedAndTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:padding="@dimen/_4sdp"
+                    android:text="80"
+                    android:textSize="@dimen/_80sdp"
+                    android:textStyle="bold"
+                    tools:fontFamily="@font/aldrich" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="KMP"
+                    android:textSize="@dimen/_16sdp"
+                    android:textStyle="bold"
+                    tools:fontFamily="@font/aldrich" />
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/checkSpeedAndTime"
-            android:background="#116F9C"
-            android:gravity="center"
-            android:text="Manual Speed"
-            android:textColor="#0CF505"
-            android:textSize="30dp" />
+            android:layout_height="0dp"
+            android:layout_weight="1">
 
-        <TextView
-            android:id="@+id/checkSpeedManual"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/manualSpeed"
-            android:layout_centerHorizontal="true"
-            android:background="#116F9C"
-            android:gravity="center"
-            android:text="0"
-            android:textColor="#0BB2B9"
-            android:textSize="150dp" />
+        </LinearLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/manualSpeed"
-            android:layout_toRightOf="@+id/checkSpeedManual"
-            android:background="#116F9C"
-            android:gravity="center"
-            android:text="KM"
-            android:textColor="#0BB2B9"
-            android:textSize="50dp" />
-
-        <TextView
-            android:id="@+id/address"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/checkSpeedManual"
-            android:background="#116F9C"
-            android:gravity="center"
-            android:text="Address And Time"
-            android:textColor="#0CF505"
-            android:textSize="20dp" />
-
-        <TextView
-            android:id="@+id/checkSpeedAddress"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/address"
-            android:background="#116F9C"
-            android:gravity="center"
-            android:text="Address:"
-            android:textColor="#0BB2B9"
-            android:textSize="20dp" />
-
-        <TextView
-            android:id="@+id/checkSpeedTime"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/checkSpeedAddress"
-            android:background="#116F9C"
-            android:gravity="center"
-            android:text="Time:"
-            android:textColor="#0BB2B9"
-            android:textSize="20dp" />
-
-        <TextView
-            android:id="@+id/working"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:background="#116F9C"
-            android:gravity="center"
-            android:text="Working Test:"
-            android:textColor="#0BB2B9"
-            android:textSize="20dp" />
-    </RelativeLayout>
+    </LinearLayout>
 </ScrollView>

@@ -13,7 +13,7 @@ public class DatabaseInitializer {
         return db.speedDao().getAllSpeedList();
     }
 
-    public static SpeedUPModel getLastContent(AppDatabase db) {
+    public static int getLastContent(AppDatabase db) {
         return db.speedDao().getLastContent();
     }
 }

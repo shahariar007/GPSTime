@@ -1,9 +1,12 @@
 package me.mortuza.offlinetimer;
 
 import android.Manifest;
+import android.animation.ArgbEvaluator;
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -58,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     int x = 0;
     private PermissionManager mRequestPermissionHandler;
 
-    private StringBuilder stringBuilder;
+   // private StringBuilder stringBuilder;
     private SimpleDateFormat formatter;
     double lat;
     double lon;
@@ -71,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     int ACTUAL_SPEED = 0;
     int MANUAL_SPEED = 0;
     String ADDRESS = "";
+    private Calendar calendar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +87,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         working = findViewById(R.id.working);
         formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss.SSS");
         handlePermissionClicked();
+         calendar = Calendar.getInstance();
 
         if (!isLocationEnabled(this)) {
             Toast.makeText(this, "Please turn on your location service", Toast.LENGTH_SHORT).show();
@@ -91,6 +96,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
         sensorsInitialization();
         registListener();
+        TOP_SPEED = DatabaseInitializer.getLastContent(AppDatabase.getAppDatabase(this));
     }
 
     private void sensorsInitialization() {
@@ -115,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10, 0, this);
     }
 
     protected void onResume() {
@@ -134,8 +140,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     @Override
     public void onLocationChanged(Location location) {
 
-        stringBuilder = new StringBuilder();
-        Calendar calendar = Calendar.getInstance();
+        //stringBuilder = new StringBuilder();
+
         calendar.setTimeInMillis(location.getTime());
 
         Time = formatter.format(calendar.getTime()) + " ";
@@ -178,9 +184,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     public void insert() {
         if (speedUPModel != null && flagInsert)
             DatabaseInitializer.insert(AppDatabase.getAppDatabase(this), speedUPModel);
-
-        SpeedUPModel speedUPModel = DatabaseInitializer.getLastContent(AppDatabase.getAppDatabase(this));
-        TOP_SPEED = speedUPModel.getTopSpeed();
     }
 
     @Override
@@ -209,7 +212,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     }
 
     public static double getSpeed(Location currentLocation, Location oldLocation) {
-        if(currentLocation==null ||oldLocation==null )
+        if (currentLocation == null || oldLocation == null)
             return 0.0;
         double newLat = currentLocation.getLatitude();
         double newLon = currentLocation.getLongitude();
@@ -393,6 +396,22 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 //            stringBuilder.append('\n');
 //            stringBuilder.append('\n');
 //        }
+    
+    public void animation()
+    {
+        ValueAnimator valueAnimator=new ValueAnimator();
+        valueAnimator.setIntValues(Color.RED,Color.GREEN,Color.BLACK,Color.BLUE,Color.WHITE,Color.MAGENTA);
+        valueAnimator.setDuration(10000);
+        valueAnimator.setRepeatCount(10);
+        valueAnimator.setEvaluator(new ArgbEvaluator());
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                //imageBox.setBackgroundColor((Integer) valueAnimator.getAnimatedValue());
+            }
+        });
+        valueAnimator.start();
+    }
 }
 
 
