@@ -7,6 +7,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -18,31 +19,26 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.os.Build;
+import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.TimeZone;
 
 import me.mortuza.offlinetimer.model.SpeedUPModel;
 import me.mortuza.offlinetimer.roomDatabase.AppDatabase;
 import me.mortuza.offlinetimer.roomDatabase.DatabaseInitializer;
-
-import static java.lang.Math.acos;
-import static java.lang.Math.cos;
-import static java.lang.Math.sin;
 
 public class MainActivity extends AppCompatActivity implements LocationListener, SensorEventListener {
     private static final String TAG = "MainActivity";
@@ -55,13 +51,15 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     private LocationManager mLocationManager;
     TextView checkSpeedAndTime;
     TextView checkSpeedAddress;
-    TextView checkSpeedManual;
+    // TextView checkSpeedManual;
     TextView checkSpeedTime;
+    ImageView imageCar;
     TextView working;
+    TextView topSpeed;
     int x = 0;
     private PermissionManager mRequestPermissionHandler;
 
-   // private StringBuilder stringBuilder;
+    // private StringBuilder stringBuilder;
     private SimpleDateFormat formatter;
     double lat;
     double lon;
@@ -75,6 +73,18 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     int MANUAL_SPEED = 0;
     String ADDRESS = "";
     private Calendar calendar;
+    private ValueAnimator valueAnimator;
+    private TextView mLot;
+    private TextView mAcc;
+    private TextView mLat;
+    private TextView mSpeed;
+    int S0TO30 = 1;
+    int S30TO60 = 2;
+    int S60TO80 = 3;
+    int S80TO100 = 4;
+    int LAST_STAGE = 0;
+    int NOW_STATE = 0;
+    int TOTAL_KILO = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,12 +92,14 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         setContentView(R.layout.activity_main);
         checkSpeedAndTime = findViewById(R.id.checkSpeedAndTime);
         checkSpeedAddress = findViewById(R.id.checkSpeedAddress);
-        checkSpeedManual = findViewById(R.id.checkSpeedManual);
+        // checkSpeedManual = findViewById(R.id.checkSpeedManual);
         checkSpeedTime = findViewById(R.id.checkSpeedTime);
+        imageCar = findViewById(R.id.imageCar);
         working = findViewById(R.id.working);
+        topSpeed = findViewById(R.id.topSpeed);
         formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss.SSS");
         handlePermissionClicked();
-         calendar = Calendar.getInstance();
+        calendar = Calendar.getInstance();
 
         if (!isLocationEnabled(this)) {
             Toast.makeText(this, "Please turn on your location service", Toast.LENGTH_SHORT).show();
@@ -97,6 +109,11 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         sensorsInitialization();
         registListener();
         TOP_SPEED = DatabaseInitializer.getLastContent(AppDatabase.getAppDatabase(this));
+        topSpeed.setText(TOP_SPEED + " ");
+        mLot = findViewById(R.id.lot);
+        mAcc = findViewById(R.id.acc);
+        mLat = findViewById(R.id.lat);
+        mSpeed = findViewById(R.id.speed);
     }
 
     private void sensorsInitialization() {
@@ -149,16 +166,17 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         ADDRESS = getAddress(location.getLatitude(), location.getLongitude());
         MANUAL_SPEED = ((int) (getSpeed(location, lastLocation) * 3600) / 1000);
 
-        checkSpeedTime.setText(Time);
+        checkSpeedTime.setText("TIME: " + Time);
         checkSpeedAndTime.setText(ACTUAL_SPEED + " ");
         checkSpeedAddress.setText(ADDRESS);
 
-        if (lastLocation != null)
-            checkSpeedManual.setText(MANUAL_SPEED + " ");
+        // if (lastLocation != null)
+        //checkSpeedManual.setText(MANUAL_SPEED + " ");
 
         this.lastLocation = location;
         x++;
-        working.setText(" working count= " + x + "TOP SPEED == " + TOP_SPEED);
+        working.setText("Working ON: " + x + " Second");
+        topSpeed.setText(TOP_SPEED + " ");
 
         if (TOP_SPEED <= ACTUAL_SPEED) {
             flagInsert = true;
@@ -177,8 +195,13 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         } else {
             speedUPModel = null;
         }
-
+        mAcc.setText("Accuracy : " + location.getAccuracy());
+        mLat.setText("Lat : " + location.getLatitude());
+        mLot.setText("Lot : " + location.getLongitude());
+        mLot.setText("Lot : " + location.getLongitude());
+        mSpeed.setText("Altitude : " + location.getAltitude());
         insert();
+        stateCal(ACTUAL_SPEED);
     }
 
     public void insert() {
@@ -396,21 +419,61 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 //            stringBuilder.append('\n');
 //            stringBuilder.append('\n');
 //        }
-    
-    public void animation()
-    {
-        ValueAnimator valueAnimator=new ValueAnimator();
-        valueAnimator.setIntValues(Color.RED,Color.GREEN,Color.BLACK,Color.BLUE,Color.WHITE,Color.MAGENTA);
-        valueAnimator.setDuration(10000);
-        valueAnimator.setRepeatCount(10);
+
+    public void animation(int state) {
+        if (valueAnimator != null) {
+            valueAnimator.cancel();
+            valueAnimator = null;
+        }
+        valueAnimator = new ValueAnimator();
+        ColorDrawable drawable = (ColorDrawable) imageCar.getBackground();
+        int startColor = drawable.getColor();
+
+        if (state == S0TO30) {
+            valueAnimator.setIntValues(startColor, Color.MAGENTA);
+        } else if (state == S30TO60) {
+            valueAnimator.setIntValues(startColor, Color.BLUE);
+        } else if (state == S60TO80) {
+            valueAnimator.setIntValues(startColor, Color.GREEN);
+        } else if (state == S80TO100) {
+            valueAnimator.setIntValues(startColor, Color.RED);
+        }
+        valueAnimator.setDuration(3000);
+        //valueAnimator.setRepeatCount(ValueAnimator.INFINITE);
         valueAnimator.setEvaluator(new ArgbEvaluator());
         valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                //imageBox.setBackgroundColor((Integer) valueAnimator.getAnimatedValue());
+                imageCar.setBackgroundColor((Integer) valueAnimator.getAnimatedValue());
             }
         });
         valueAnimator.start();
+    }
+
+    public void stateCal(int speed) {
+
+        if (speed > -1 && speed <= 30) {
+            NOW_STATE = S0TO30;
+        } else if (speed >= 30 && speed <= 60) {
+            NOW_STATE = S30TO60;
+        } else if (speed >= 60 && speed <= 80) {
+            NOW_STATE = S60TO80;
+        } else {
+            NOW_STATE = S80TO100;
+        }
+        if (LAST_STAGE != NOW_STATE) {
+            animation(NOW_STATE);
+        }
+        LAST_STAGE = NOW_STATE;
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (valueAnimator != null) {
+            valueAnimator.cancel();
+
+        }
+        super.onDestroy();
     }
 }
 
