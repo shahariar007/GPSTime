@@ -155,7 +155,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
     @SuppressLint("MissingPermission")
     @Override
-    public void onLocationChanged(Location location) {
+    public void onLocationChanged(final Location location) {
 
         //stringBuilder = new StringBuilder();
 
@@ -163,12 +163,18 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
         Time = formatter.format(calendar.getTime()) + " ";
         ACTUAL_SPEED = (int) ((location.getSpeed() * 3600) / 1000);
-        ADDRESS = getAddress(location.getLatitude(), location.getLongitude());
-        MANUAL_SPEED = ((int) (getSpeed(location, lastLocation) * 3600) / 1000);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                getAddress(location.getLatitude(), location.getLongitude());
+            }
+        }).start();
+
+        //MANUAL_SPEED = ((int) (getSpeed(location, lastLocation) * 3600) / 1000);
 
         checkSpeedTime.setText("TIME: " + Time);
         checkSpeedAndTime.setText(ACTUAL_SPEED + " ");
-        checkSpeedAddress.setText(ADDRESS);
+
 
         // if (lastLocation != null)
         //checkSpeedManual.setText(MANUAL_SPEED + " ");
@@ -197,8 +203,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         }
         mAcc.setText("Accuracy : " + location.getAccuracy());
         mLat.setText("Lat : " + location.getLatitude());
-        mLot.setText("Lot : " + location.getLongitude());
-        mLot.setText("Lot : " + location.getLongitude());
+        mLot.setText("Lon : " + location.getLongitude());
         mSpeed.setText("Altitude : " + location.getAltitude());
         insert();
         stateCal(ACTUAL_SPEED);
@@ -263,10 +268,10 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     }
     //TO
 
-    public String getAddress(double a, double b) {
+    public void getAddress(double a, double b) {
 
         if (!isNetworkConnected()) {
-            return "Connect Internet for location address";
+            ADDRESS = "Turn on Internet for address";
         }
 
         Geocoder geocoder;
@@ -281,10 +286,20 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
             String country = addresses.get(0).getCountryName();
             String postalCode = addresses.get(0).getPostalCode();
             String knownName = addresses.get(0).getFeatureName();
-            return address;
+            ADDRESS = address;
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        checkSpeedAddress.setText(ADDRESS);
+                    } catch (Exception e) {
+                        e.getMessage();
+                    }
+
+                }
+            });
         } catch (IOException e) {
             e.printStackTrace();
-            return e.getMessage();
         }
     }
 

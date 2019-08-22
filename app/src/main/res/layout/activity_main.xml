@@ -55,9 +55,9 @@
                             android:padding="@dimen/_4sdp"
                             android:text="TOP"
                             android:textColor="@android:color/black"
-                            android:textSize="@dimen/_22sdp"
+                            android:textSize="@dimen/_16sdp"
                             android:textStyle="bold"
-                            tools:fontFamily="@font/audiowide" />
+                            android:fontFamily="@font/audiowide" />
                     </LinearLayout>
 
 
@@ -66,17 +66,18 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginTop="@dimen/_16sdp"
-                        android:text="80"
-                        android:textColor="@android:color/black"
-                        android:textSize="@dimen/_55sdp"
+                        android:layout_marginTop="@dimen/_6sdp"
+                        android:text="0"
+                        android:textColor="@color/red"
+                        android:textSize="@dimen/_60sdp"
                         android:textStyle="bold"
-                        tools:fontFamily="@font/aldrich" />
+                        android:fontFamily="@font/tests"  />
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/_30sdp"
                         android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="@dimen/_2sdp"
                         android:adjustViewBounds="true"
                         android:src="@drawable/xxx"
                         tools:ignore="ContentDescription" />
@@ -113,7 +114,7 @@
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/_16sdp"
                 android:textStyle="bold"
-                tools:fontFamily="@font/audiowide" />
+                android:fontFamily="@font/audiowide" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -139,11 +140,11 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:padding="@dimen/_4sdp"
-                    android:text="0"
-                    android:textColor="@android:color/black"
-                    android:textSize="@dimen/_60sdp"
+                    android:text="00"
+                    android:textColor="@color/red"
+                    android:textSize="@dimen/_67sdp"
                     android:textStyle="bold"
-                    tools:fontFamily="@font/aldrich" />
+                    android:fontFamily="@font/tests" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -154,7 +155,7 @@
                     android:textColor="@android:color/black"
                     android:textSize="@dimen/_16sdp"
                     android:textStyle="bold"
-                    tools:fontFamily="@font/aldrich" />
+                    android:fontFamily="@font/aldrich" />
             </LinearLayout>
 
 
@@ -178,7 +179,7 @@
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/_16sdp"
                 android:textStyle="bold"
-                tools:fontFamily="@font/audiowide" />
+                android:fontFamily="@font/audiowide" />
 
 
             <TextView
@@ -222,7 +223,7 @@
                 android:text="Lat:"
                 android:textColor="@android:color/black"
                 android:textStyle="bold"
-                tools:fontFamily="@font/aldrich" />
+                android:fontFamily="@font/aldrich" />
 
             <TextView
                 android:id="@+id/lot"
@@ -239,7 +240,7 @@
                 android:text="Lon:"
                 android:textColor="@android:color/black"
                 android:textStyle="bold"
-                tools:fontFamily="@font/aldrich" />
+                android:fontFamily="@font/aldrich" />
 
             <TextView
                 android:id="@+id/acc"
@@ -256,7 +257,7 @@
                 android:text="Accuracy :"
                 android:textColor="@android:color/black"
                 android:textStyle="bold"
-                tools:fontFamily="@font/aldrich" />
+                android:fontFamily="@font/aldrich" />
 
             <TextView
                 android:id="@+id/speed"
@@ -274,7 +275,7 @@
                 android:text="Altitude:"
                 android:textColor="@android:color/black"
                 android:textStyle="bold"
-                tools:fontFamily="@font/aldrich" />
+                android:fontFamily="@font/aldrich" />
 
             <TextView
                 android:id="@+id/working"
