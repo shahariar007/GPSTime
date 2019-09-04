@@ -8,6 +8,9 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.LayerDrawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -29,6 +32,7 @@ import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -99,6 +103,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     private int generalLength;
     private SpannableString str3;
     private int avgs;
+    private int ff = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,11 +131,26 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         sensorsInitialization();
         registListener();
         TOP_SPEED = DatabaseInitializer.getLastContent(AppDatabase.getAppDatabase(this));
-        topSpeed.setText(topFormat.format(TOP_SPEED) + " ");
+        topSpeed.setText(topFormat.format(TOP_SPEED));
         mLot = findViewById(R.id.lot);
         mAcc = findViewById(R.id.acc);
         mLat = findViewById(R.id.lat);
         mSpeed = findViewById(R.id.speed);
+        imageCar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (ff == 0) {
+                    imageCar.setImageResource(R.drawable.blackeee);
+                    ff++;
+                } else if (ff == 1) {
+                    imageCar.setImageResource(R.drawable.bus);
+                    ff++;
+                } else if (ff == 2) {
+                    imageCar.setImageResource(R.drawable.train);
+                    ff = 0;
+                }
+            }
+        });
     }
 
     private void sensorsInitialization() {
@@ -289,7 +309,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
             return ((distance / timeDifferent) * 3600) / 1000;
         }
     }
-    //TO
 
     public void getAddress(double a, double b) {
 
@@ -483,6 +502,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 imageCar.setBackgroundColor((Integer) valueAnimator.getAnimatedValue());
+                getDrawables((Integer) valueAnimator.getAnimatedValue());
             }
         });
         valueAnimator.start();
@@ -549,6 +569,18 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         checkSpeedAndTime.setTextColor(Color.DKGRAY);
         return builder;
 
+    }
+
+    public void getDrawables(int color) {
+        LayerDrawable layerDrawable = (LayerDrawable) getResources().getDrawable(R.drawable.background_4);
+        GradientDrawable outer = (GradientDrawable) layerDrawable.findDrawableByLayerId(R.id.bottomLayer);
+        outer.setColors(new int[]{color, Color.parseColor("#FFEB3B"), Color.parseColor("#FFFFFF")});
+//        outer.setColors(new int[]{Color.parseColor("#FF0000"), Color.parseColor("#FFEB3B"), Color.parseColor("#FFFFFF")});
+
+        mAcc.setBackground(layerDrawable);
+        mLat.setBackground(layerDrawable);
+        mLot.setBackground(layerDrawable);
+        mSpeed.setBackground(layerDrawable);
     }
 }
 
