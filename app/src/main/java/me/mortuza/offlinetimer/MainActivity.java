@@ -24,13 +24,17 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
@@ -56,6 +60,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     ImageView imageCar;
     TextView working;
     TextView topSpeed;
+    TextView totalRun;
+    TextView avg;
     int x = 0;
     private PermissionManager mRequestPermissionHandler;
 
@@ -85,19 +91,30 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     int LAST_STAGE = 0;
     int NOW_STATE = 0;
     int TOTAL_KILO = 0;
+    DecimalFormat topFormat = new DecimalFormat("000");
+    DecimalFormat speedFormat = new DecimalFormat("000");
+    DecimalFormat totalSpeedKmh = new DecimalFormat("00.##");
+    int totalSpeed = 0;
+    private SpannableStringBuilder builder;
+    private int generalLength;
+    private SpannableString str3;
+    private int avgs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_new_layout);
         checkSpeedAndTime = findViewById(R.id.checkSpeedAndTime);
+        checkSpeedAndTime.setTextColor(Color.DKGRAY);
         checkSpeedAddress = findViewById(R.id.checkSpeedAddress);
         // checkSpeedManual = findViewById(R.id.checkSpeedManual);
         checkSpeedTime = findViewById(R.id.checkSpeedTime);
         imageCar = findViewById(R.id.imageCar);
         working = findViewById(R.id.working);
         topSpeed = findViewById(R.id.topSpeed);
-        formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss.SSS");
+        totalRun = findViewById(R.id.totalRun);
+        avg = findViewById(R.id.avg);
+        formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
         handlePermissionClicked();
         calendar = Calendar.getInstance();
 
@@ -109,7 +126,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         sensorsInitialization();
         registListener();
         TOP_SPEED = DatabaseInitializer.getLastContent(AppDatabase.getAppDatabase(this));
-        topSpeed.setText(TOP_SPEED + " ");
+        topSpeed.setText(topFormat.format(TOP_SPEED) + " ");
         mLot = findViewById(R.id.lot);
         mAcc = findViewById(R.id.acc);
         mLat = findViewById(R.id.lat);
@@ -172,17 +189,21 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
         //MANUAL_SPEED = ((int) (getSpeed(location, lastLocation) * 3600) / 1000);
 
-        checkSpeedTime.setText("TIME: " + Time);
-        checkSpeedAndTime.setText(ACTUAL_SPEED + " ");
-
+        checkSpeedTime.setText(Time);
+        checkSpeedAndTime.setText(setTexts(String.valueOf(speedFormat.format(ACTUAL_SPEED))), TextView.BufferType.SPANNABLE);
 
         // if (lastLocation != null)
         //checkSpeedManual.setText(MANUAL_SPEED + " ");
+        totalSpeed += location.getSpeed();
+        totalRun.setText(totalSpeedKmh.format((float) totalSpeed / 1000));
+
 
         this.lastLocation = location;
         x++;
         working.setText("Working ON: " + x + " Second");
-        topSpeed.setText(TOP_SPEED + " ");
+        topSpeed.setText(String.valueOf(topFormat.format(TOP_SPEED)));
+        avgs = (((totalSpeed / x) * 3600) / 1000);
+        avg.setText(String.valueOf(speedFormat.format(avgs)));
 
         if (TOP_SPEED <= ACTUAL_SPEED) {
             flagInsert = true;
@@ -207,6 +228,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         mSpeed.setText("Altitude : " + location.getAltitude());
         insert();
         stateCal(ACTUAL_SPEED);
+
+
     }
 
     public void insert() {
@@ -489,6 +512,43 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
         }
         super.onDestroy();
+    }
+
+    public SpannableStringBuilder setTexts(String originalText) {
+        generalLength = 3;
+        String[] x = originalText.split("(?!^)");
+        builder = new SpannableStringBuilder();
+        if (originalText.length() == 3) {
+            for (String s : x) {
+                if (Integer.valueOf(s) == 0) {
+                    generalLength -= 1;
+                } else {
+                    break;
+                }
+            }
+            Log.d("DigitUIActivity", "setTexts: " + generalLength);
+
+            if (generalLength == 3) {
+                str3 = new SpannableString(originalText);
+                str3.setSpan(new ForegroundColorSpan(Color.RED), 0, originalText.length(), 0);
+                builder.append(str3);
+            } else if (generalLength == 2) {
+                str3 = new SpannableString(originalText);
+                str3.setSpan(new ForegroundColorSpan(Color.RED), 1, originalText.length(), 0);
+                builder.append(str3);
+            } else if (generalLength == 1) {
+                str3 = new SpannableString(originalText);
+                str3.setSpan(new ForegroundColorSpan(Color.RED), 2, originalText.length(), 0);
+                builder.append(str3);
+            } else {
+                str3 = new SpannableString(originalText);
+                str3.setSpan(new ForegroundColorSpan(Color.DKGRAY), 0, originalText.length(), 0);
+                builder.append(str3);
+            }
+        }
+        checkSpeedAndTime.setTextColor(Color.DKGRAY);
+        return builder;
+
     }
 }
 

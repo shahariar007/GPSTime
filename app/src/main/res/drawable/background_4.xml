@@ -31,9 +31,9 @@
                 android:topRightRadius="100dp" />
             <gradient
                 android:angle="90"
-                android:centerColor="#83C6CC"
+                android:centerColor="#5AE262"
                 android:endColor="#FFFFFF"
-                android:startColor="#07EBF3" />
+                android:startColor="#FF0000" />
         </shape>
 
     </item>

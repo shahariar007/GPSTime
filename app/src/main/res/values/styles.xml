@@ -13,4 +13,8 @@
 
     </style>
 
+    <style name="ColorTheme">
+        <item name="android:textColor">#FF0000</item>
+    </style>
+
 </resources>
