@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -10,6 +10,7 @@
         <item name="windowActionBar">false</item>
         <item name="windowActionBarOverlay">true</item>
         <item name="android:windowNoTitle">true</item>
+        <item name="android:statusBarColor" tools:targetApi="lollipop">@color/black</item>
 
     </style>
 
@@ -17,4 +18,5 @@
         <item name="android:textColor">#FF0000</item>
     </style>
 
+    <color name="black">#000000</color>
 </resources>

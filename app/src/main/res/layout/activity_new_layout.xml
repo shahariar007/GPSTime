@@ -246,59 +246,64 @@
 
 
         </LinearLayout>
-<FrameLayout
-    android:layout_width="match_parent"
-    android:layout_height="0dp"
-    android:layout_weight="1"
-    android:gravity="center">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:orientation="horizontal">
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:layout_weight="1"
-            android:orientation="vertical">
+            android:gravity="center">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_marginTop="@dimen/_minus30sdp"
+                        android:id="@+id/checkSpeedAndTime"
+                        style="@style/ColorTheme"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:fontFamily="@font/best"
+                        android:gravity="center"
+                        android:text="000"
+                        android:textSize="@dimen/_180sdp" />
+                </LinearLayout>
+            </LinearLayout>
 
             <TextView
-                android:layout_marginTop="@dimen/_minus40sdp"
-                android:id="@+id/checkSpeedAndTime"
                 style="@style/ColorTheme"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:layout_gravity="right"
                 android:fontFamily="@font/best"
-                android:gravity="center"
-                android:text="000"
-                android:textSize="@dimen/_180sdp" />
-        </LinearLayout>
-    </LinearLayout>
-    <TextView
-        style="@style/ColorTheme"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right"
-        android:fontFamily="@font/best"
-        android:padding="@dimen/_2sdp"
-        android:text="SPEED"
-        android:textSize="@dimen/_20sdp"
-        android:textStyle="bold" />
-    <TextView
-        android:layout_marginBottom="@dimen/_35sdp"
-        style="@style/ColorTheme"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right|bottom"
-        android:fontFamily="@font/best"
-        android:padding="@dimen/_2sdp"
-        android:text="KM/H"
-        android:textSize="@dimen/_20sdp"
-        android:textStyle="bold" />
-</FrameLayout>
+                android:padding="@dimen/_2sdp"
+                android:text="SPEED"
+                android:textSize="@dimen/_20sdp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_marginBottom="@dimen/_35sdp"
+                style="@style/ColorTheme"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|bottom"
+                android:fontFamily="@font/best"
+                android:padding="@dimen/_2sdp"
+                android:text="KM/H"
+                android:textSize="@dimen/_20sdp"
+                android:textStyle="bold" />
+        </FrameLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -340,13 +345,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginTop="@dimen/_16sdp"
+                    android:layout_margin="@dimen/_4sdp"
                     android:background="@drawable/background_4"
                     android:fontFamily="@font/best"
                     android:gravity="center_vertical"
                     android:lines="2"
                     android:minWidth="@dimen/_160sdp"
                     android:padding="@dimen/_10sdp"
+
                     android:text="Lat:"
                     android:textColor="@android:color/black"
                     android:textStyle="bold" />
@@ -357,7 +363,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/lat"
                     android:layout_gravity="center"
-                    android:layout_marginTop="@dimen/_16sdp"
+                    android:layout_margin="@dimen/_4sdp"
                     android:background="@drawable/background_4"
                     android:fontFamily="@font/best"
                     android:gravity="center_vertical"
@@ -373,7 +379,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginTop="@dimen/_16sdp"
+                    android:layout_margin="@dimen/_4sdp"
                     android:layout_toRightOf="@+id/lat"
                     android:background="@drawable/background_4"
                     android:gravity="center_vertical"
@@ -391,7 +397,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/acc"
                     android:layout_gravity="center"
-                    android:layout_marginTop="@dimen/_16sdp"
+                    android:layout_margin="@dimen/_4sdp"
                     android:layout_toRightOf="@+id/lot"
                     android:background="@drawable/background_4"
                     android:fontFamily="@font/best"
