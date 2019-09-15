@@ -14,13 +14,27 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="right"
             android:orientation="horizontal">
 
+            <ImageView
+                android:id="@+id/connectionImage"
+                android:tag="0"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:padding="@dimen/_15sdp"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:src="@drawable/satellite_yellow" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/topSpeed"
@@ -61,7 +75,7 @@
                     android:textSize="@dimen/_20sdp"
                     android:textStyle="bold" />
             </LinearLayout>
-
+            </LinearLayout>
 
         </LinearLayout>
 
@@ -101,7 +115,7 @@
                             android:fontFamily="@font/best"
                             android:gravity="right"
                             android:text="000"
-                            android:textSize="@dimen/_30sdp" />
+                            android:textSize="@dimen/_35sdp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -167,7 +181,7 @@
                             android:fontFamily="@font/best"
                             android:gravity="right"
                             android:text="000"
-                            android:textSize="@dimen/_30sdp" />
+                            android:textSize="@dimen/_35sdp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -267,12 +281,12 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:layout_marginTop="@dimen/_minus30sdp"
                         android:id="@+id/checkSpeedAndTime"
                         style="@style/ColorTheme"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
+                        android:layout_marginTop="@dimen/_minus30sdp"
                         android:fontFamily="@font/best"
                         android:gravity="center"
                         android:text="000"
@@ -288,15 +302,16 @@
                 android:fontFamily="@font/best"
                 android:padding="@dimen/_2sdp"
                 android:text="SPEED"
+                android:visibility="gone"
                 android:textSize="@dimen/_20sdp"
                 android:textStyle="bold" />
 
             <TextView
-                android:layout_marginBottom="@dimen/_35sdp"
                 style="@style/ColorTheme"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right|bottom"
+                android:layout_marginBottom="@dimen/_35sdp"
                 android:fontFamily="@font/best"
                 android:padding="@dimen/_2sdp"
                 android:text="KM/H"
@@ -314,6 +329,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
+
                 <ImageView
                     android:id="@+id/imageCar"
                     android:layout_width="@dimen/_120sdp"
@@ -335,86 +351,102 @@
                     android:textStyle="bold" />
             </LinearLayout>
 
-            <RelativeLayout
+            <LinearLayout
+                android:layout_marginTop="@dimen/_6sdp"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/lat"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_margin="@dimen/_4sdp"
-                    android:background="@drawable/background_4"
-                    android:gravity="center_vertical"
-                    android:lines="2"
-                    android:minWidth="@dimen/_160sdp"
-                    android:padding="@dimen/_10sdp"
-
-                    android:text="Lat:"
-                    android:textColor="@android:color/black"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/lot"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/lat"
-                    android:layout_gravity="center"
-                    android:layout_margin="@dimen/_4sdp"
-                    android:background="@drawable/background_4"
-                    android:gravity="center_vertical"
-                    android:lines="2"
-                    android:minWidth="@dimen/_160sdp"
-                    android:padding="@dimen/_10sdp"
-                    android:text="Lon:"
-                    android:textColor="@android:color/black"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/acc"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_margin="@dimen/_4sdp"
-                    android:layout_toRightOf="@+id/lat"
-                    android:background="@drawable/background_4"
-                    android:gravity="center_vertical"
-                    android:lines="2"
-                    android:minWidth="@dimen/_160sdp"
-                    android:padding="@dimen/_10sdp"
-                    android:text="Accuracy :"
-                    android:textColor="@android:color/black"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/speed"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/acc"
-                    android:layout_gravity="center"
-                    android:layout_margin="@dimen/_4sdp"
-                    android:layout_toRightOf="@+id/lot"
-                    android:background="@drawable/background_4"
-                    android:gravity="center_vertical"
-                    android:lines="2"
-                    android:minWidth="@dimen/_160sdp"
-                    android:padding="@dimen/_10sdp"
-                    android:text="Altitude:"
-                    android:textColor="@android:color/black"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/working"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:gravity="center"
-                    android:text="Working on:"
-                    android:textColor="#0BB2B9" />
+                    android:orientation="horizontal">
 
-            </RelativeLayout>
+                    <TextView
+                        android:id="@+id/lat"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_margin="@dimen/_2sdp"
+                        android:maxHeight="@dimen/_35sdp"
+                        android:minHeight="@dimen/_35sdp"
+                        android:layout_weight="1"
+                        android:background="@drawable/background_4"
+                        android:gravity="center_vertical"
+                        android:lines="2"
+                        android:padding="@dimen/_10sdp"
+                        android:text="Lat:"
+                        tools:text="Lat:000000000000000000000000000000000000000000"
+                        android:textColor="@android:color/black"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/lot"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:maxHeight="@dimen/_35sdp"
+                        android:minHeight="@dimen/_35sdp"
+                        android:layout_gravity="center"
+                        android:layout_margin="@dimen/_2sdp"
+                        android:layout_weight="1"
+                        android:background="@drawable/background_4"
+                        android:gravity="center_vertical"
+                        android:lines="2"
+                        android:padding="@dimen/_10sdp"
+                        android:text="Lon:"
+                        android:textColor="@android:color/black"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/acc"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_margin="@dimen/_4sdp"
+                        android:layout_weight="1"
+                        android:maxHeight="@dimen/_35sdp"
+                        android:minHeight="@dimen/_35sdp"
+                        android:background="@drawable/background_4"
+                        android:gravity="center_vertical"
+                        android:lines="2"
+                        android:padding="@dimen/_10sdp"
+                        android:text="Accuracy :"
+                        android:textColor="@android:color/black"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/speed"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_margin="@dimen/_4sdp"
+                        android:layout_weight="1"
+                        android:background="@drawable/background_4"
+                        android:gravity="center_vertical"
+                        android:lines="2"
+                        android:maxHeight="@dimen/_35sdp"
+                        android:minHeight="@dimen/_35sdp"
+                        android:padding="@dimen/_10sdp"
+                        android:text="Altitude:"
+                        android:textColor="@android:color/black"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+            </LinearLayout>
         </LinearLayout>
-
+        <TextView
+            android:id="@+id/working"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:gravity="center"
+            android:text="Working on:"
+            android:textColor="#0BB2B9" />
     </LinearLayout>
 </ScrollView>

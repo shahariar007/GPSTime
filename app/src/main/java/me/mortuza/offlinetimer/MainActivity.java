@@ -62,11 +62,13 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     // TextView checkSpeedManual;
     TextView checkSpeedTime;
     ImageView imageCar;
+    ImageView connectionImage;
     TextView working;
     TextView topSpeed;
     TextView totalRun;
     TextView avg;
     int x = 0;
+    int y = 0;
     private PermissionManager mRequestPermissionHandler;
 
     // private StringBuilder stringBuilder;
@@ -104,6 +106,10 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     private SpannableString str3;
     private int avgs;
     private int ff = 1;
+    private Geocoder geocoder;
+    private boolean threadRun = true;
+    private Thread thread;
+    private boolean firstTime=true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,6 +121,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         // checkSpeedManual = findViewById(R.id.checkSpeedManual);
         checkSpeedTime = findViewById(R.id.checkSpeedTime);
         imageCar = findViewById(R.id.imageCar);
+        connectionImage = findViewById(R.id.connectionImage);
         working = findViewById(R.id.working);
         topSpeed = findViewById(R.id.topSpeed);
         totalRun = findViewById(R.id.totalRun);
@@ -195,17 +202,24 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     public void onLocationChanged(final Location location) {
 
         //stringBuilder = new StringBuilder();
-
+        if (connectionImage.getTag().equals("0")) {
+            connectionImage.setImageResource(R.drawable.satellite);
+            connectionImage.setTag("1");
+        }
         calendar.setTimeInMillis(location.getTime());
 
         Time = formatter.format(calendar.getTime()) + " ";
         ACTUAL_SPEED = (int) ((location.getSpeed() * 3600) / 1000);
-        new Thread(new Runnable() {
+        thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 getAddress(location.getLatitude(), location.getLongitude());
             }
-        }).start();
+        });
+        if ((threadRun && location.getSpeed()!=0)||firstTime) {
+            thread.start();
+            Log.d("MainActivity", "onLocationChanged:sss ");
+        }
 
         //MANUAL_SPEED = ((int) (getSpeed(location, lastLocation) * 3600) / 1000);
 
@@ -222,8 +236,11 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         x++;
         working.setText("Working ON: " + x + " Second");
         topSpeed.setText(String.valueOf(topFormat.format(TOP_SPEED)));
-        avgs = (((totalSpeed / x) * 3600) / 1000);
-        avg.setText(String.valueOf(speedFormat.format(avgs)));
+        if (location.getSpeed() != 0) {
+            y++;
+            avgs = (((totalSpeed / y) * 3600) / 1000);
+            avg.setText(String.valueOf(speedFormat.format(avgs)));
+        }
 
         if (TOP_SPEED <= ACTUAL_SPEED) {
             flagInsert = true;
@@ -259,17 +276,17 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
     @Override
     public void onStatusChanged(String s, int i, Bundle bundle) {
-
+        Log.d("MainActivity", "onStatusChanged: "+s + "i=" + i);
     }
 
     @Override
     public void onProviderEnabled(String s) {
-
+        Log.d("MainActivity", "onProviderEnabled: "+s);
     }
 
     @Override
     public void onProviderDisabled(String s) {
-
+        Log.d("MainActivity", "onProviderDisabled: "+s);
     }
 
     @Override
@@ -315,8 +332,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         if (!isNetworkConnected()) {
             ADDRESS = "Turn on Internet for address";
         }
-
-        Geocoder geocoder;
+        threadRun = false;
+        firstTime = false;
         List<Address> addresses;
         geocoder = new Geocoder(this, Locale.getDefault());
 
@@ -334,8 +351,10 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
                 public void run() {
                     try {
                         checkSpeedAddress.setText(ADDRESS);
+                        threadRun = true;
                     } catch (Exception e) {
                         e.getMessage();
+                        threadRun = true;
                     }
 
                 }
@@ -531,6 +550,10 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
             valueAnimator.cancel();
 
         }
+        if(thread!=null)
+        {
+            thread.interrupt();
+        }
         super.onDestroy();
     }
 
@@ -582,6 +605,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         mLot.setBackground(layerDrawable);
         mSpeed.setBackground(layerDrawable);
     }
+
 }
 
 
